@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
 recherche = ["universal_ product_code (upc)", "title", "price_including_tax",
     "price_excluding_tax", "number_available", "product_description",
@@ -17,14 +18,26 @@ soup = BeautifulSoup(page.content, 'html.parser')
 
 # Extraction des données dispersées
 extracts = {}
+
 title = soup.find("li", class_="active")
 extracts["title"] = title.string
-p = soup.findAll('p', {})
-extracts["product_description"] = p[3].string
-category = soup.find_all('a',
-                         href='http://books.toscrape.com/catalogue/category/books/poetry_23/index.html')
-print("category", category)
-#extraction données du tableau html
+
+paragraphe = soup.findAll('p', {})
+extracts["product_description"] = paragraphe[3].string
+
+category = soup.find("a", href=re.compile("/books/"))
+extracts["category"] = category.string
+
+review_rating = soup.find(class_=re.compile("star-rating"))
+extracts[review_rating['class'][0]] = review_rating['class'][1]
+
+image_tag = soup.find('div', class_= "item active")
+img_tag = image_tag.img
+image_url = img_tag['src']
+extracts["image_url"] = image_url
+
+
+# Extraction données du tableau html
 trs = soup.find_all("tr")
 for tr in trs:
     th = tr.find("th")
@@ -40,11 +53,3 @@ correspondence = {
     "number_available": "Avaibility"
     }
 #for key in correspondence.keys():
-
-
-
-'''
-
-
-
-'''
