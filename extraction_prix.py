@@ -37,22 +37,24 @@ for tr in trs:
     th = tr.find("th")
     td = tr.find("td")
     extracts[th.string] = td.string
-print(extracts)
+#print(extracts)
 
 # Ecriture des données dans fichier csv
 en_tete = ["universal_ product_code (upc)", "title", "price_including_tax",
     "price_excluding_tax", "number_available", "product_description",
     "category", "review_rating", "image_url"
     ]
+source_en_tete = ["UPC", "title", "Price (incl. tax)", "Price (excl. tax)",
+    "Availability", "product_description", "category", "star-rating",
+    "image_url"
+    ]
+source_data = []
 with open('bookstoscrape_data.csv', 'w') as file_csv:
     writer = csv.writer(file_csv, delimiter=',')
     writer.writerow(en_tete)
 
-# Dictionnaire de correspondence
-correspondence = {
-    "universal_ product_code (upc)": "UPC",
-    "price_including_tax": "Price (incl. tax)",
-    "price_excluding_tax": "Price (excl tax)",
-    "number_available": "Avaibility"
-    }
-#for key in correspondence.keys():
+    for destination_key, source_key in zip(en_tete, source_en_tete):
+        item = extracts[source_key]
+        source_data.append(item)
+
+    writer.writerow(source_data)
