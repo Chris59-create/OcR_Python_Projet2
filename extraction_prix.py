@@ -16,7 +16,7 @@ product_page_url = ("http://books.toscrape.com/catalogue/a-light-in-the"
 page = requests.get(product_page_url)
 soup = BeautifulSoup(page.content, 'html.parser')
 
-# Extraction des données dispersées
+# Extraction des données dispersées et ajout dans dictionnaire
 extracts = {}
 
 title = soup.find("li", class_="active")
@@ -33,17 +33,19 @@ extracts[review_rating['class'][0]] = review_rating['class'][1]
 
 image_tag = soup.find('div', class_= "item active")
 img_tag = image_tag.img
-image_url = img_tag['src']
+image_url = "htpp://books.toscrape.com" + img_tag['src'][5:]
 extracts["image_url"] = image_url
 
 
-# Extraction données du tableau html
+# Extraction données du tableau html et ajout dans dictionnaire
 trs = soup.find_all("tr")
 for tr in trs:
     th = tr.find("th")
     td = tr.find("td")
     extracts[th.string] = td.string
 print(extracts)
+
+# Ecriture des données dans fichier csv
 
 # Dictionnaire de correspondence
 correspondence = {
