@@ -3,6 +3,22 @@ from bs4 import BeautifulSoup
 import re
 import csv
 
+# boucler dans toutes les pages d'une catégorie
+urlBooksList =[]
+page_category_url =('http://books.toscrape.com/catalogue/category/books'
+                    '/mystery_3/index.html')
+page_category = requests.get(page_category_url)
+soup_category = BeautifulSoup(page_category.content, 'html.parser')
+for href in soup_category.find_all('a', title=True):
+    urlBook = "http://books.toscrape.com/catalogue" + href['href'][8:]
+    urlBooksList.append(urlBook)
+print(urlBooksList)
+
+
+
+#image_url = "htpp://books.toscrape.com" + img_tag['src'][5:]
+# extract url de chaque page produit
+'''
 # Extraction à partir page produit
 
 # Récupération code source de la page
@@ -58,3 +74,4 @@ with open('bookstoscrape_data.csv', 'w') as file_csv:
         source_data.append(item)
 
     writer.writerow(source_data)
+'''
