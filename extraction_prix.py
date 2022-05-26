@@ -16,21 +16,21 @@ def csvEcrit(extracts):
         "image_url"
         ]
     source_data = []
-    with open('bookstoscrape_data.csv', 'w') as file_csv:
+    for destination_key, source_key in zip(en_tete, source_en_tete):
+        item = extracts[source_key]
+        source_data.append(item)
+    with open('bookstoscrape_data.csv', 'a') as file_csv:
         writer = csv.writer(file_csv, delimiter=',')
         writer.writerow(en_tete)
-
-        for destination_key, source_key in zip(en_tete, source_en_tete):
-            item = extracts[source_key]
-            source_data.append(item)
-
         writer.writerow(source_data)
 
 
 # Création du dictionnaire des données du produit
 def dataDict(soup):
+    # Initialisation du dictionnaire de données
     extracts = {}
 
+    # Extraction des données éparses
     title = soup.find("li", class_="active")
     extracts["title"] = title.string
 
@@ -55,39 +55,41 @@ def dataDict(soup):
         td = tr.find("td")
         extracts[th.string] = td.string
     print("extracts : ", extracts)
-    csvEcrit(extracts)
+
+    return extracts
 
 
 # Récupération code source de la page produit
 def productPageContent(url):
-    product_page_url = ("http://books.toscrape.com/catalogue/a-light-in-the"
-                        "-attic_1000/index.html")
+    product_page_url = url
     page = requests.get(product_page_url)
     soup = BeautifulSoup(page.content, 'html.parser')
     print("Soup : ", soup)
-    dataDict(soup)
+    return soup
 
 
-# Utilisation des url des pages produits
-def urlBooksUse(urlBooksList):
-    for urlBook in urlBooksList:
-        url = urlBook
-        print(url)
-        productPageContent(url)
-
-
-# Utilisation de l'url de category
+# Liste de toutes les url produit de la page category
 def urlBooksExtract(category_url):
     urlBooksList = []
-    page_category_url = category_url
-    page_category = requests.get(page_category_url)
+    #page_category_url = category_url
+    page_category = requests.get(category_url)
     soup_category = BeautifulSoup(page_category.content, 'html.parser')
     for href in soup_category.find_all('a', title=True):
         urlBook = "http://books.toscrape.com/catalogue" + href['href'][8:]
         urlBooksList.append(urlBook)
-    print(urlBooksList)
-    urlBooksUse(urlBooksList)
+    print("liste url books", urlBooksList)
+    return urlBooksList
 
-# Lancement processus avec une url de page category
-urlBooksExtract('http://books.toscrape.com/catalogue/category/books'
-        '/mystery_3/index.html')
+# Lancement de la fonction d'extraction des url produits à partir category
+urlBooksList = urlBooksExtract('http://books.toscrape.com/catalogue/category'
+                            '/books/mystery_3/index.html')
+
+# Traitement par url produit
+for urlBook in urlBooksList:
+    url = urlBook
+    print(url)
+    soup = productPageContent(url)
+    extracts = dataDict(soup)
+    csvEcrit(extracts)
+
+print("Nombre de livres : ", len(urlBooksList))
