@@ -24,7 +24,6 @@ def urlBooksExtract(category_url):
     for href in soup_category.find_all('a', title=True):
         urlBook = "http://books.toscrape.com/catalogue" + href['href'][8:]
         urlBooksList.append(urlBook)
-    print("liste url books", urlBooksList)
     return urlBooksList
 
 
@@ -64,10 +63,7 @@ def dataDict(soup):
 
 # Ecriture des données dans fichier csv
 def csvEcrit(extracts):
-    en_tete = ["universal_ product_code (upc)", "title", "price_including_tax",
-        "price_excluding_tax", "number_available", "product_description",
-        "category", "review_rating", "image_url"
-        ]
+
     source_en_tete = ["UPC", "title", "Price (incl. tax)", "Price (excl. tax)",
         "Availability", "product_description", "category", "star-rating",
         "image_url"
@@ -76,17 +72,30 @@ def csvEcrit(extracts):
     for destination_key, source_key in zip(en_tete, source_en_tete):
         item = extracts[source_key]
         source_data.append(item)
+
     with open('bookstoscrape_data.csv', 'a') as file_csv:
         writer = csv.writer(file_csv, delimiter=',')
-        writer.writerow(en_tete)
         writer.writerow(source_data)
+
+
+
+# Traitement par url produit
+# en_tete = fieldnames for the csv files
+en_tete = ["universal_ product_code (upc)", "title", "price_including_tax",
+        "price_excluding_tax", "number_available", "product_description",
+        "category", "review_rating", "image_url"
+        ]
+# Creation of the csv file with first row en_tete"
+with open('bookstoscrape_data.csv', 'w') as file_csv:
+    writer = csv.writer(file_csv, delimiter=',')
+    writer.writerow(en_tete)
 
 
 # Lancement de la fonction d'extraction des url produits à partir category
 urlBooksList = urlBooksExtract('http://books.toscrape.com/catalogue/category'
                             '/books/mystery_3/index.html')
 
-# Traitement par url produit
+
 for urlBook in urlBooksList:
     url = urlBook
     print(url)
