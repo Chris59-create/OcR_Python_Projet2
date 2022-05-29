@@ -11,14 +11,13 @@ def productPageContent(url):
     product_page_url = url
     page = requests.get(product_page_url)
     soup = BeautifulSoup(page.content, 'html.parser')
-    print("Soup : ", soup)
+    #print("Soup : ", soup)
     return soup
 
 
 # Liste de toutes les url produit de la page category
 def urlBooksExtract(category_url):
     urlBooksList = []
-    #page_category_url = category_url
     page_category = requests.get(category_url)
     soup_category = BeautifulSoup(page_category.content, 'html.parser')
     for href in soup_category.find_all('a', title=True):
@@ -78,7 +77,6 @@ def csvEcrit(extracts):
         writer.writerow(source_data)
 
 
-
 # Traitement par url produit
 # en_tete = fieldnames for the csv files
 en_tete = ["universal_ product_code (upc)", "title", "price_including_tax",
@@ -91,16 +89,44 @@ with open('bookstoscrape_data.csv', 'w') as file_csv:
     writer.writerow(en_tete)
 
 
-# Lancement de la fonction d'extraction des url produits à partir category
-urlBooksList = urlBooksExtract('http://books.toscrape.com/catalogue/category'
-                            '/books/mystery_3/index.html')
-
-
-for urlBook in urlBooksList:
-    url = urlBook
-    print(url)
-    soup = productPageContent(url)
-    extracts = dataDict(soup)
-    csvEcrit(extracts)
-
-print("Nombre de livres : ", len(urlBooksList))
+# Extract of the code source of the page index of category
+urlCategory = ('http://books.toscrape.com/catalogue/category'
+    '/books/mystery_3/index.html')
+# url split in variables
+urlSplit = urlCategory.split("/")
+urlEnd = urlSplit[-1]
+nameCategory = urlSplit[-2]
+urlRoot = ""
+for part in urlSplit[:-1]:
+    urlRoot += part + "/"
+# Extract of the code source of the page Category
+soupCategory = productPageContent(urlCategory)
+# Here I need a loop
+pagesNumberExtract = soupCategory.find('li', class_="current")
+pagesNumberText = pagesNumberExtract.text.split()
+pagesNumber = int(pagesNumberText[-1])
+# Creation of list of products pagess urls of the page index
+# of the category
+urlBooksList = urlBooksExtract(urlCategory)
+i=0
+# Loop for data extract for all books on all pages of category
+while i in range(pagesNumber):
+    print("Nombre de livres : ", len(urlBooksList))
+    for urlBook in urlBooksList:
+        url = urlBook
+        print(url)
+        soupBook = productPageContent(urlBook)
+        extracts = dataDict(soupBook)
+        csvEcrit(extracts)
+    # If category continues on an another page
+   #if soupCategory.find('a', text='next'):
+       # print('/n', '/n')
+    # Next page url of the category
+    nextPage = soupCategory.find('a', text="next")
+    nextPageUrl = urlRoot + nextPage['href']
+    print(nextPageUrl)
+    urlBooksList = urlBooksExtract(nextPageUrl)
+    #else:
+       # print("passer à la catégorie suivante")
+    print(i)
+    i += 1
