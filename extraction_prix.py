@@ -3,10 +3,8 @@ from bs4 import BeautifulSoup
 import re
 import csv
 
-# Récupération des liens des pages produits pour la catégorie
 
-
-# Récupération code source de la page produit
+# Load the source code of the page
 def productPageContent(url):
     product_page_url = url
     page = requests.get(product_page_url)
@@ -15,7 +13,7 @@ def productPageContent(url):
     return soup
 
 
-# Liste de toutes les url produit de la page category
+# List of all book's urls of the category page
 def urlBooksExtract(category_url):
     urlBooksList = []
     page_category = requests.get(category_url)
@@ -26,12 +24,12 @@ def urlBooksExtract(category_url):
     return urlBooksList
 
 
-# Création du dictionnaire des données du produit
+# Create dictionary of book data
 def dataDict(soup):
     # Initialisation du dictionnaire de données
     extracts = {}
 
-    # Extraction des données éparses
+    # Extract disseminated data
     title = soup.find("li", class_="active")
     extracts["title"] = title.string
 
@@ -49,7 +47,7 @@ def dataDict(soup):
     image_url = "htpp://books.toscrape.com" + img_tag['src'][5:]
     extracts["image_url"] = image_url
 
-    # Extraction données du tableau html et ajout dans dictionnaire
+    # Extract data of the html table and adding in dictionary
     trs = soup.find_all("tr")
     for tr in trs:
         th = tr.find("th")
@@ -60,7 +58,7 @@ def dataDict(soup):
     return extracts
 
 
-# Ecriture des données dans fichier csv
+# Writing of the book data in the csv file
 def csvEcrit(extracts):
 
     source_en_tete = ["UPC", "title", "Price (incl. tax)", "Price (excl. tax)",
@@ -77,22 +75,19 @@ def csvEcrit(extracts):
         writer.writerow(source_data)
 
 
-# Traitement par url produit
-# en_tete = fieldnames for the csv files
+# Creation of the csv file with first row en_tete"
 en_tete = ["universal_ product_code (upc)", "title", "price_including_tax",
         "price_excluding_tax", "number_available", "product_description",
         "category", "review_rating", "image_url"
         ]
-# Creation of the csv file with first row en_tete"
 with open('bookstoscrape_data.csv', 'w') as file_csv:
     writer = csv.writer(file_csv, delimiter=',')
     writer.writerow(en_tete)
 
-
 # Extract of the code source of the page index of category
 urlCategory = ('http://books.toscrape.com/catalogue/category'
     '/books/mystery_3/index.html')
-# url split in variables
+# Category url split in variables
 urlSplit = urlCategory.split("/")
 urlEnd = urlSplit[-1]
 nameCategory = urlSplit[-2]
@@ -101,15 +96,15 @@ for part in urlSplit[:-1]:
     urlRoot += part + "/"
 # Extract of the code source of the page Category
 soupCategory = productPageContent(urlCategory)
-# Here I need a loop
+# Extract of the number of pages of the category
 pagesNumberExtract = soupCategory.find('li', class_="current")
 pagesNumberText = pagesNumberExtract.text.split()
 pagesNumber = int(pagesNumberText[-1])
-# Creation of list of products pagess urls of the page index
+# list urls of products pages from the first page of category
 # of the category
 urlBooksList = urlBooksExtract(urlCategory)
-i=0
 # Loop for data extract for all books on all pages of category
+i=0
 while i in range(pagesNumber):
     print("Nombre de livres : ", len(urlBooksList))
     for urlBook in urlBooksList:
@@ -118,15 +113,10 @@ while i in range(pagesNumber):
         soupBook = productPageContent(urlBook)
         extracts = dataDict(soupBook)
         csvEcrit(extracts)
-    # If category continues on an another page
-   #if soupCategory.find('a', text='next'):
-       # print('/n', '/n')
-    # Next page url of the category
+    # Url of the next page of the category
     nextPage = soupCategory.find('a', text="next")
     nextPageUrl = urlRoot + nextPage['href']
     print(nextPageUrl)
     urlBooksList = urlBooksExtract(nextPageUrl)
-    #else:
-       # print("passer à la catégorie suivante")
     print(i)
     i += 1
