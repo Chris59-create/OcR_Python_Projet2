@@ -65,14 +65,30 @@ def urlBooksExtract(category_url):
 
 
 # Create dictionary of book data
-def dataDict(soup):
+def dataDict(soup, urlbook):
     print('\n', "début dataDict(soup)", '\n')# for test
     # Initialization data dictionary
     extracts = {}
 
-    # Extract disseminated data
+    extracts["product_page_url"] = urlbook
+
+    th = soup.find('th', text="UPC")
+    extracts["universal_ product_code (upc)"] = th.findNext('td').text
+
     title = soup.find("li", class_="active")
     extracts["title"] = title.string
+
+    th = soup.find('th', text="Price (incl. tax)")
+    extracts["price_including_tax"] = float(th.findNext('td').text.replace("£", ""))
+
+    th = soup.find('th', text="Price (excl. tax)")
+    extracts["price_excluding_tax"] = float(th.findNext('td').text.replace("£", ""))
+
+    th = soup.find('th', text="Availability")
+    td = th.findNext('td').text
+    extracts["number_available"] = [int(s) for s in td.replace("(","").split()
+                                    if s.isdigit()
+                                    ]
 
     paragraphe = soup.findAll('p', {})
     extracts["product_description"] = paragraphe[3].string
@@ -88,27 +104,27 @@ def dataDict(soup):
     image_url = "htpp://books.toscrape.com" + img_tag['src'][5:]
     extracts["image_url"] = image_url
 
+    print("extracts : ", extracts)  # for test
+    print('\n', "Fin dataDict")  # for test
+
+    return extracts
+
+'''
     # Extract data of the html table and adding in dictionary
     trs = soup.find_all("tr")
     for tr in trs:
         th = tr.find("th")
         td = tr.find("td")
-        extracts[th.string] = td.string
-    print("extracts : ", extracts)# for test
-    print('\n', "Fin dataDict")# for test
-    return extracts
+        extracts[th.string] = td.string'''
+
 
 
 # Writing of the book data in the csv file
 def csvEcrit(extracts):
     print('\n', "csvEcrit(extracts)", '\n')# for test
-    source_en_tete = ["UPC", "title", "Price (incl. tax)", "Price (excl. tax)",
-        "Availability", "product_description", "category", "star-rating",
-        "image_url"
-        ]
     source_data = []
-    for source_key in source_en_tete:
-        item = extracts[source_key]
+    for key in extracts:
+        item = extracts[key]
         source_data.append(item)
     writer = csv.writer(file_csv, delimiter=',')
     writer.writerow(source_data)
@@ -147,7 +163,8 @@ for urlCategory, nameCategory in zip(urlCategoriesList, namesCategoriesList):
     # Create the csv file of the category with first row en_tete"
     # in the folder csv_files
     nameCsv = "csv_files/" + nameCategory + "_data.csv"
-    en_tete = ["universal_ product_code (upc)", "title", "price_including_tax",
+    en_tete = ["product_page_url", "universal_ product_code (upc)", "title",
+               "price_including_tax",
                "price_excluding_tax", "number_available",
                "product_description",
                "category", "review_rating", "image_url"
@@ -159,5 +176,5 @@ for urlCategory, nameCategory in zip(urlCategoriesList, namesCategoriesList):
         #Extract of books data of the category
         for urlBook in urlBooksList:
             soup = productPageContent(urlBook)
-            extracts = dataDict(soup)
+            extracts = dataDict(soup, urlBook)
             csvEcrit(extracts)
