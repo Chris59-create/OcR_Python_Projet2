@@ -24,6 +24,7 @@ def urlCategoriesExtract(soup):
     for href in soup.find_all('a', href=re.compile("/category/")):
         urlCategory = "http://books.toscrape.com/" + href['href']
         urlCategoriesList.append(urlCategory)
+    del urlCategoriesList[0]
     print(urlCategoriesList)# for test
     print('/n', "fin urlCategoriesExtract(soup)", '/n')# for test
     return urlCategoriesList
@@ -32,7 +33,7 @@ def urlCategoriesExtract(soup):
 def namesCategories(urlCategoriesList):
     print('/n', "début namesCategories", '/n')# for test
     nameCategoryList = []
-    for item in urlCategoriesList[1:]:
+    for item in urlCategoriesList:
         urlCategorySplit = item.split('/')
         nameCategory = urlCategorySplit[-2].split("_")[-2]
         nameCategoryList.append(nameCategory)
@@ -123,7 +124,7 @@ with open('bookstoscrape_data.csv', 'w') as file_csv:
     writer.writerow(en_tete)
 
 #
-for urlCategory in urlCategoriesList[1:]:
+for urlCategory in urlCategoriesList:
     # Extract root of the category url
     urlRoot = urlCategory[:-10]
     print(urlRoot)#for test
@@ -143,7 +144,10 @@ for urlCategory in urlCategoriesList[1:]:
 
     print("list of book urls of category", urlBooksList)#for test
     #Extract of books data of the category
-    extracts = dataDict(soupBook)
+    for urlBook in urlBooksList:
+        soup = productPageContent(urlBook)
+        extracts = dataDict(soup)
+        csvEcrit(extracts)
 
 
 
