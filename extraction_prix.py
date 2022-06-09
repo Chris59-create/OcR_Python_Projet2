@@ -88,7 +88,7 @@ def dataDict(soup, urlbook):
     td = th.findNext('td').text
     extracts["number_available"] = [int(s) for s in td.replace("(","").split()
                                     if s.isdigit()
-                                    ]
+                                    ][0]
 
     paragraphe = soup.findAll('p', {})
     extracts["product_description"] = paragraphe[3].string
