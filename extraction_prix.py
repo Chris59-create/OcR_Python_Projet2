@@ -70,6 +70,8 @@ def dataDict(soup, urlbook):
     # Initialization data dictionary
     extracts = {}
 
+    # Extract of data
+
     extracts["product_page_url"] = urlbook
 
     th = soup.find('th', text="UPC")
@@ -79,16 +81,18 @@ def dataDict(soup, urlbook):
     extracts["title"] = title.string
 
     th = soup.find('th', text="Price (incl. tax)")
-    extracts["price_including_tax"] = float(th.findNext('td').text.replace("£", ""))
+    extracts["price_including_tax"] = float(th.findNext('td').text.replace(
+        "£", ""))
 
     th = soup.find('th', text="Price (excl. tax)")
-    extracts["price_excluding_tax"] = float(th.findNext('td').text.replace("£", ""))
+    extracts["price_excluding_tax"] = float(th.findNext('td').text.replace(
+        "£", ""))
 
     th = soup.find('th', text="Availability")
     td = th.findNext('td').text
-    extracts["number_available"] = [int(s) for s in td.replace("(","").split()
-                                    if s.isdigit()
-                                    ][0]
+    extracts["number_available"] = ([int(s) for s
+                                     in td.replace("(", "").split()
+                                     if s.isdigit()][0])
 
     paragraphe = soup.findAll('p', {})
     extracts["product_description"] = paragraphe[3].string
@@ -108,15 +112,6 @@ def dataDict(soup, urlbook):
     print('\n', "Fin dataDict")  # for test
 
     return extracts
-
-'''
-    # Extract data of the html table and adding in dictionary
-    trs = soup.find_all("tr")
-    for tr in trs:
-        th = tr.find("th")
-        td = tr.find("td")
-        extracts[th.string] = td.string'''
-
 
 
 # Writing of the book data in the csv file
