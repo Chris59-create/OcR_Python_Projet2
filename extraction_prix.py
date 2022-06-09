@@ -9,9 +9,14 @@ homeUrl = 'http://books.toscrape.com/'
 
 # Create the directory csv-files in the current directory
 # To store the csv files per category
-dir = 'csv_files'
-if not os.path.exists(dir):
-    os.mkdir(dir)
+dirCsv = 'csv_files'
+if not os.path.exists(dirCsv):
+    os.mkdir(dirCsv)
+# Create the directory books_img in the current directory
+# To store the subdirectories per category for books img
+dirImg = "img_directories"
+if not os.path.exists(dirImg):
+    os.mkdir(dirImg)
 
 # Library of functions
 
@@ -105,7 +110,7 @@ def dataDict(soup, urlbook):
 
     image_tag = soup.find('div', class_= "item active")
     img_tag = image_tag.img
-    image_url = "htpp://books.toscrape.com" + img_tag['src'][5:]
+    image_url = "http://books.toscrape.com" + img_tag['src'][5:]
     extracts["image_url"] = image_url
 
     print("extracts : ", extracts)  # for test
@@ -173,3 +178,15 @@ for urlCategory, nameCategory in zip(urlCategoriesList, namesCategoriesList):
             soup = productPageContent(urlBook)
             extracts = dataDict(soup, urlBook)
             csvEcrit(extracts)
+            # if not exist create directory for download images of category
+            pathCategoryImg = dirImg + "/" + nameCategory + "_img"
+            if not os.path.exists(pathCategoryImg):
+                os.mkdir(pathCategoryImg)
+            # Download the image of the current book in the directory
+            urlImg = extracts["image_url"]
+            fileTypImg = urlImg.split(".")[-1]
+            bookTitle = ''.join(filter(str.isalnum, extracts["title"]))
+            fileName = pathCategoryImg + "/" + bookTitle + "." + fileTypImg
+            print(fileName)
+            r = requests.get(urlImg)
+            open(fileName, 'wb').write(r.content)
