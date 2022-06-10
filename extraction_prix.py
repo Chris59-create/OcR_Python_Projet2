@@ -173,10 +173,11 @@ for urlCategory, nameCategory in zip(urlCategoriesList, namesCategoriesList):
         writer = csv.writer(file_csv, delimiter=',')
         writer.writerow(en_tete)
 
-        #Extract of books data of the category
+        #Extract books data of the category
         for urlBook in urlBooksList:
             soup = productPageContent(urlBook)
             extracts = dataDict(soup, urlBook)
+            # Write the books data in a csv file for the category
             csvEcrit(extracts)
             # if not exist create directory for download images of category
             pathCategoryImg = dirImg + "/" + nameCategory + "_img"
@@ -185,8 +186,11 @@ for urlCategory, nameCategory in zip(urlCategoriesList, namesCategoriesList):
             # Download the image of the current book in the directory
             urlImg = extracts["image_url"]
             fileTypImg = urlImg.split(".")[-1]
-            bookTitle = ''.join(filter(str.isalnum, extracts["title"]))
-            fileName = pathCategoryImg + "/" + bookTitle + "." + fileTypImg
+            # Image of the book named wiht book UPC
+            fileName = (pathCategoryImg + "/"
+                        + extracts["universal_ product_code (upc)"]
+                        + "." + fileTypImg)
             print(fileName)
             r = requests.get(urlImg)
-            open(fileName, 'wb').write(r.content)
+            with open(fileName, 'wb') as file:
+                file.write(r.content)
