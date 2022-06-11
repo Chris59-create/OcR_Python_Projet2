@@ -13,10 +13,11 @@ homeUrl = 'http://books.toscrape.com/'
 # To store the csv files per category
 dirCsv = 'csv_files'
 if not os.path.exists(dirCsv):
-    print("The directory 'csv_files' is created in the current directory. For "
-          "each category of books, each data extracted per book is stored in "
-          "a csv file named with the name of the category. These csv_files is "
-          "located in the created directory.", '\n')
+    print("The directory 'csv_files' is created in the current "
+          "directory.\nFor each category of books, each data extracted per "
+          "book is stored in a csv file named with the name of the "
+          "category.\nThese csv_files is located in the created "
+          "directory.", '\n')
     os.mkdir(dirCsv)
 else:
     print("The directory 'csv_files' already exists in the current directory",
@@ -26,9 +27,9 @@ else:
 dirImg = "img_directories"
 if not os.path.exists(dirImg):
     print("The directory 'img_directories' is created in the current "
-          "directory. In this just created directroy, each image of a book is "
-          "stored in a named nameCategory_img subdirectory. The image file "
-          "is named with the UPC of the relative book", '\n')
+          "directory.\nIn this just created directroy, each image of a book "
+          "is stored in a named nameCategory_img subdirectory.\nThe image "
+          "file is named with the UPC of the relative book", '\n')
     os.mkdir(dirImg)
 else:
     print("The directory 'img_directories' already exists in the current "
@@ -62,14 +63,14 @@ def namesCategories(urlCategoriesList):
         urlCategorySplit = item.split('/')
         nameCategory = urlCategorySplit[-2].split("_")[-2]
         nameCategoryList.append(nameCategory)
-    # Preparation of print of names of category like table
+    # Preparation to print names of category like table
     print("-" * 72, '\n', "Names of the categories:", '\n')
     board = []
     for name in nameCategoryList:
         board.append(name)
         l = len(board)
         if l % 5 == 0:
-            print(board[l - 5:l], '\n')
+            print(board[l - 5:], '\n')
     return nameCategoryList
 
 
@@ -147,6 +148,7 @@ urlCategoriesList = urlCategoriesExtract(soup)
 namesCategoriesList= namesCategories(urlCategoriesList)
 
 # Treatment of each category
+treatedCategoriesnumber = 0
 for urlCategory, nameCategory in zip(urlCategoriesList, namesCategoriesList):
     # Extract root of the category url
     urlRoot = urlCategory[:-10]
@@ -206,7 +208,13 @@ for urlCategory, nameCategory in zip(urlCategoriesList, namesCategoriesList):
         print(f"{imgNumber} images are downloaded for the "
                     f"category '{nameCategory}'.", '\n')
 
+    # Tracking of the number of categories already processed
+    treatedCategoriesnumber += 1
+    print(f"The process of {treatedCategoriesnumber} category(ies) is already "
+          f"done. {len(urlCategoriesList)-treatedCategoriesnumber} to handle",
+          '\n')
+
 print(f"The scrapping of the url '{homeUrl}' is ended", '\n', "You can find "
         "the extracted data in the subdiretory 'csv_files' in the current "
         "directory and the images of the books in the subdirectory "
-        "'img_directories'.")
+        "'img_directories'.", '\n')
