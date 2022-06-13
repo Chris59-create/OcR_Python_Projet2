@@ -33,7 +33,11 @@ This python program is written as **study case** to be evaluated for validation 
 - [] Install the packages according the configuration file `$ pip install -r requirements.txt`.
 – []Run the program `$ python extraction_prix.py`.
 
-During the process, dynamic messages will show you the step one of the scrapping
+During the process, dynamic messages will show you the step one of the scrapping:
+
+[Messages during the processing of the program](/img_README/in_progress_messages_extraction_prix.png)
+
+[Message at the end of the program](/img_README/end_message_extraction_prix.png)
 
 ## Credits
 Author: Chris59create (Chris59-create)
