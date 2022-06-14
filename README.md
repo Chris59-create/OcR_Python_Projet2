@@ -5,11 +5,11 @@ This python program is written as **study case** to be evaluated for validation 
 ## Configuration
 - macOS 12.4 21F79
 - Python 3.10.4
-- Packages environnement, see [requirements.txt](/requirements.txt)
+- Packages environment, see [requirements.txt](/requirements.txt)
 
 ## Features
-1. Create a subdirectory `csv_files` in the current directory to store the csv files wich will contains the data of the books.
-2. Create subdirectory `ìmg_subsidories` in the current directory to store the images of the books downloaded from the website.
+1. Creates a subdirectory `csv_files` in the current directory to store the csv files wich will contains the data of the books.
+2. Creates subdirectory `ìmg_subsidories` in the current directory to store the images of the books downloaded from the website.
 3. Extracts all the urls of the categories of books.
 4. Extracts all the categories names.
 5. Per category: extracts all books urls.
@@ -31,15 +31,15 @@ This python program is written as **study case** to be evaluated for validation 
 ## How to use the program
 - [] Clone [the github repository](https://github.com/Chris59-create/ocr_python_projet2.git) locally
 - [] Install the packages according the configuration file `$ pip install -r requirements.txt`.
-– []Run the program `$ python extraction_prix.py`.
+– [] Run the program `$ python extraction_prix.py`.
 
-During the process, dynamic messages will show you the step one of the scrapping:
+During the process, dynamic messages will show you the step done of the scrapping:
 
-[Messages during the processing of the program](/img_README/in_progress_messages_extraction_prix.png)
+	[Messages during the processing of the program](/img_README/in_progress_messages_extraction_prix.png)
 
-[Message at the end of the program](/img_README/end_message_extraction_prix.png)
+	[Message at the end of the program](/img_README/end_message_extraction_prix.png)
 
 ## Credits
 Author: Chris59create (Chris59-create)
 
-**Beware this a a coding for a training evaluation. The use of this code (Cloning, global or incomplete copy or re use of it) is forbidden.**
+**Beware this is a a coding for a training evaluation. The use of this code (Cloning, global or incomplete copy or re use of it) is forbidden.**
