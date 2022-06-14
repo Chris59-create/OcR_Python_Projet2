@@ -15,16 +15,16 @@ This python program is written as **study case** to be evaluated for validation 
 5. Per category: extracts all books urls.
 6. Per book of the category:
     1. Extracts the following data :
-      - Product_page_url
-      - Universal_ product_code (upc)
-      - Title
-      - Price_including_tax
-      - Price_excluding_tax
-      - Number_available
-      - Product_description
-      - Category
-      - Review_rating
-      - Image_url
+          - Product_page_url
+          - Universal_ product_code (upc)
+          - Title
+          - Price_including_tax
+          - Price_excluding_tax
+          - Number_available
+          - Product_description
+          - Category
+          - Review_rating
+          - Image_url
     2. Writes the data in a csv file named `nameCategory_data.csv`. The csv file is stored in the subdirectory `csv_files`.
     3. Downloads the image of the book as `Universal_product_code.(filetyp of the image source)` in a subdirectory named `nameCategory_img`.
                
