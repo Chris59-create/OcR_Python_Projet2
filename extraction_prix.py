@@ -22,7 +22,7 @@ if not os.path.exists(dirCsv):
 else:
     print("The directory 'csv_files' already exists in the current directory",
           '\n')
-# Create the directory books_img in the current directory
+# Create the directory img_directories in the current directory
 # To store the subdirectories per category for books img
 dirImg = "img_directories"
 if not os.path.exists(dirImg):
