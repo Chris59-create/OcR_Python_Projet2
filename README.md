@@ -29,9 +29,9 @@ This python program is written as **study case** to be evaluated for validation 
     3. Downloads the image of the book as `Universal_product_code.(filetyp of the image source)` in a subdirectory named `nameCategory_img`.
                
 ## How to use the program
-- [] Clone [the github repository](https://github.com/Chris59-create/ocr_python_projet2.git) locally
-- [] Install the packages according the configuration file `$ pip install -r requirements.txt`.
-– [] Run the program `$ python extraction_prix.py`.
+- [ ] Clone [the github repository](https://github.com/Chris59-create/ocr_python_projet2.git) locally
+- [ ] Install the packages according the configuration file `$ pip install -r requirements.txt`.
+- [ ] Run the program `$ python extraction_prix.py`.
 
 During the process, dynamic messages will show you the step done of the scrapping:
 
