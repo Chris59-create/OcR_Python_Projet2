@@ -3,13 +3,13 @@
 This python program is written as **study case** to be evaluated for validation of the project 2 of the **OpenClassrooms Python training courses**. The purpose is to ***scrape the website of [Books to scrape](http://books.toscrape.com/)***, an online books reseller. The program doesn't watch the website in real time, but on demand will extract some data, especially the prices, of the books sold by the website.
 
 ## Configuration
-- macOS 12.4 21F79
+- Coding done under macOS 12.4 21F79
 - Python 3.10.4
 - Packages environment, see [requirements.txt](/requirements.txt)
 
 ## Features
 1. Creates a subdirectory `csv_files` in the current directory to store the csv files wich will contains the data of the books.
-2. Creates subdirectory `ìmg_subsidories` in the current directory to store the images of the books downloaded from the website.
+2. Creates subdirectory `ìmg_directories` in the current directory to store the images of the books downloaded from the website.
 3. Extracts all the urls of the categories of books.
 4. Extracts all the categories names.
 5. Per category: extracts all books urls.
